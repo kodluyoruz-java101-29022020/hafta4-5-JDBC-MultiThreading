@@ -22,7 +22,7 @@ Yardımlaşma için birbirinizden ve benden yardım alabilirsiniz. Tek şart cop
 * 4 Thread kendine ait 2500 elemanlık ArrayList'i işlemeye başlayınca tek ve çift sayı ArrayList'lerini dolduracaktır.
 
 
-2- "chapter-4-database-operations" isminde JDBC API kullanarak MySQL veritabanı ile haberleşen bir program hazırlanmıştır. Programda işlem menüleri vardır. İşlem menüsünü kullanarak çalışan kayıtlarını çekebilmek, çalışan profilini görüntülemek, yeni çalışan ekleyebilmek, güncelleyebilmek ve silebilmek gibi işlemler mümkündür. Bu özelliklerin hepsi kodlanmıştır. Programda eksik olan özellikler bulunmaktadır. Bu eksik özellikleri sizin kodlamanız gerekmektedir. Eksik olan kod blokları içinde açıklama satırlarında detaylar bulunmaktadır. Ayrıca eksik olan kısımlar aşağıda maddeler halinde listelenmiştir. Her madde için kod yazmanız gerekmektedir.
+**Soru2:** "chapter-4-database-operations" isminde JDBC API kullanarak MySQL veritabanı ile haberleşen bir program hazırlanmıştır. Programda işlem menüleri vardır. İşlem menüsünü kullanarak çalışan kayıtlarını çekebilmek, çalışan profilini görüntülemek, yeni çalışan ekleyebilmek, güncelleyebilmek ve silebilmek gibi işlemler mümkündür. Bu özelliklerin hepsi kodlanmıştır. Programda eksik olan özellikler bulunmaktadır. Bu eksik özellikleri sizin kodlamanız gerekmektedir. Eksik olan kod blokları içinde açıklama satırlarında detaylar bulunmaktadır. Ayrıca eksik olan kısımlar aşağıda maddeler halinde listelenmiştir. Her madde için kod yazmanız gerekmektedir.
 
 Not: Öncelikle uygulmayı çalıştırınız ve nasıl çalıştığını gözlemleyiniz. Ardından, kodları inceleyiniz.
 Not: Uygulamayı çalıştırmak için "db.connection.mysql" paketi altındaki "Application.java" sınıfını sağ tıklayıp çalıştırabilirsiniz.
