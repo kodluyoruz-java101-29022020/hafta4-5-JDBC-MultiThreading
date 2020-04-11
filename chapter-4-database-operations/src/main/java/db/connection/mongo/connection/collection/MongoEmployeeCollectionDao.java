@@ -1,5 +1,8 @@
 package db.connection.mongo.connection.collection;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bson.Document;
 
 import com.mongodb.BasicDBObject;
@@ -10,6 +13,7 @@ import com.mongodb.client.MongoDatabase;
 import db.connection.mongo.Main;
 import db.connection.mongo.connection.MongoDatabaseManager;
 import db.connection.mysql.connection.model.Employee;
+import db.connection.mysql.connection.model.EmployeeProfile;
 
 public class MongoEmployeeCollectionDao {
 
@@ -17,18 +21,22 @@ public class MongoEmployeeCollectionDao {
 	private String collectionName = "employees_document";
 	
 	public MongoEmployeeCollectionDao() {
+		
 		database = MongoDatabaseManager.getDB(Main.dbName);
 		
-		if(database.getCollection(collectionName) == null) {
+		if(database.getCollection(collectionName) == null) 
+		{
 			database.createCollection(collectionName);
 		}
 	}
 	
-	public boolean save(Employee employee) {
+	public boolean save(EmployeeProfile employeeProfile) {
 	
 		try {
 			
 			MongoCollection<Document> collection = database.getCollection(collectionName);
+			
+			Employee employee = employeeProfile.getEmployee();
 			
 			Document employeeDoc = new Document();
 			employeeDoc.put("mysql_id", employee.getId());
@@ -37,6 +45,8 @@ public class MongoEmployeeCollectionDao {
 			employeeDoc.put("gender", employee.getGender());
 			employeeDoc.put("birthdate", employee.getBirthDate());
 			employeeDoc.put("hiredate", employee.getHireDate());
+			employeeDoc.put("salaries", employeeProfile.getSalaries());
+			employeeDoc.put("department_name", employeeProfile.getDepartmentName());
 			
 			collection.insertOne(employeeDoc);
 		}
@@ -47,7 +57,39 @@ public class MongoEmployeeCollectionDao {
 		return true;
 	}
 	
-	public Document findByMySqlId(Long empNo) {
+	public boolean update(EmployeeProfile employeeProfile) {
+		
+		try {
+			
+			MongoCollection<Document> collection = database.getCollection(collectionName);
+			
+			Employee employee = employeeProfile.getEmployee();
+			
+			BasicDBObject query = new BasicDBObject();
+			query.put("mysql_id", employee.getId());
+			
+			Document employeeDoc = new Document();
+			employeeDoc.put("mysql_id", employee.getId());
+			employeeDoc.put("name", employee.getName());
+			employeeDoc.put("last_name", employee.getLastName());
+			employeeDoc.put("gender", employee.getGender());
+			employeeDoc.put("birthdate", employee.getBirthDate());
+			employeeDoc.put("hiredate", employee.getHireDate());
+			employeeDoc.put("salaries", employeeProfile.getSalaries());
+			employeeDoc.put("department_name", employeeProfile.getDepartmentName());
+			
+			collection.updateOne(query, employeeDoc);
+			
+			return true;
+		}
+		catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+		return false;
+	}
+	
+	public EmployeeProfile findByMySqlId(Long empNo) {
 		
 		MongoCollection<Document> collection = database.getCollection(collectionName);
 
@@ -56,7 +98,25 @@ public class MongoEmployeeCollectionDao {
 		
 		FindIterable<Document> cursor = collection.find(query);
 		
-		return cursor.iterator().next();
+		Document document = cursor.iterator().next();
+		
+		EmployeeProfile employeeProfile = new EmployeeProfile();
+		
+		Employee employee = new Employee();
+		employee.setId(document.getLong("mysql_id"));
+		employee.setName(document.getString("name"));
+		employee.setLastName(document.getString("last_name"));
+		employee.setGender(document.getString("gender"));
+		employee.setBirthDate(document.getDate("birthdate"));
+		employee.setHireDate(document.getDate("hiredate"));
+		
+		employeeProfile.setEmployee(employee);
+		employeeProfile.setDepartmentName(document.getString("department_name"));
+		
+		List<Long> salaries = document.get("salaries", new ArrayList<Long>().getClass());
+		employeeProfile.setSalaries(salaries);
+		
+		return employeeProfile;
 	}
 	
 }

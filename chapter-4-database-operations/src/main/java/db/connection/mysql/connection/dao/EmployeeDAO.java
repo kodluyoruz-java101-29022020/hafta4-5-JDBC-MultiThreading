@@ -246,6 +246,7 @@ public class EmployeeDAO {
 	private Employee createEmployee(ResultSet resultSet) throws SQLException {
 		
 		Employee employee = new Employee();
+		
 		employee.setId(resultSet.getLong("emp_no"));
 		employee.setName(resultSet.getString("first_name"));
 		employee.setLastName(resultSet.getString("last_name"));

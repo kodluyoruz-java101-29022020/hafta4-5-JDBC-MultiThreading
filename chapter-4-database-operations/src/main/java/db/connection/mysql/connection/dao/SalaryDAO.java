@@ -27,7 +27,8 @@ public class SalaryDAO {
 				return salaries;
 			}
 			
-			while(resultSet.next()) {
+			while(resultSet.next()) 
+			{
 				salaries.add(createSalary(resultSet));
 			}
 			
@@ -68,6 +69,7 @@ public class SalaryDAO {
 	private Salary createSalary(ResultSet resultSet) throws SQLException {
 		
 		Salary salary = new Salary();
+		
 		salary.setEmpNo(resultSet.getLong("emp_no"));
 		salary.setSalary(resultSet.getInt("salary"));
 		salary.setFromDate(resultSet.getDate("from_date"));

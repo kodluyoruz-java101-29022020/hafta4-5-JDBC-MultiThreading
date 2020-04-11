@@ -30,7 +30,8 @@ public class MainSamples {
 		
 		MongoEmployeeCollectionDao mongoEmployeeCollectionDao = new MongoEmployeeCollectionDao();
 		for(Employee employee : employees) {
-			mongoEmployeeCollectionDao.save(employee);
+			EmployeeProfile currentEmployeeProfile = employeeDAO.loadEmployeeProfile(employee.getId());
+			mongoEmployeeCollectionDao.save(currentEmployeeProfile);
 		}
 		
 		

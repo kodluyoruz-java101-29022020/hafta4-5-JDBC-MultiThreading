@@ -2,6 +2,7 @@ package db.connection.mysql.connection.service;
 
 import java.util.Set;
 
+import db.connection.mongo.connection.collection.MongoEmployeeCollectionDao;
 import db.connection.mysql.connection.dao.EmployeeDAO;
 import db.connection.mysql.connection.model.Employee;
 import db.connection.mysql.connection.model.EmployeeProfile;
@@ -10,15 +11,28 @@ public class EmployeeService {
 
 	private EmployeeDAO employeeDAO;
 	
-	public EmployeeService(EmployeeDAO employeeDAO) {
+	private MongoEmployeeCollectionDao employeeCollectionDao;
+	
+	public EmployeeService(EmployeeDAO employeeDAO, MongoEmployeeCollectionDao employeeCollectionDao) {
 		this.employeeDAO = employeeDAO;
+		this.employeeCollectionDao = employeeCollectionDao;
 	}
 	
 	public Employee save(Employee employee) {
 		
 		 Long maxEmployeeId = this.employeeDAO.getMaxId();
-		 employee.setId(maxEmployeeId);
+		 employee.setId(maxEmployeeId + 1);
 		 return this.employeeDAO.save(employee);
+	}
+	
+	public boolean saveAsDraft(EmployeeProfile employeeProfile) {
+		
+		return this.employeeCollectionDao.save(employeeProfile);
+	}
+	
+	public EmployeeProfile loadProfileAsDraft(Long empNo) {
+		
+		return this.employeeCollectionDao.findByMySqlId(empNo);
 	}
 	
 	public Employee findById(Long empNo) {

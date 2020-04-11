@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.Set;
 
+import db.connection.mongo.connection.collection.MongoEmployeeCollectionDao;
 import db.connection.mysql.connection.dao.DepartmentDAO;
 import db.connection.mysql.connection.dao.EmployeeDAO;
 import db.connection.mysql.connection.dao.ManagerDAO;
@@ -30,7 +31,9 @@ public class Application {
 		ManagerDAO managerDAO = new ManagerDAO();
 		DepartmentDAO departmentDAO = new DepartmentDAO();
 		
-		EmployeeService employeeService = new EmployeeService(employeeDAO);
+		MongoEmployeeCollectionDao mongoEmployeeCollectionDao = new MongoEmployeeCollectionDao();
+		
+		EmployeeService employeeService = new EmployeeService(employeeDAO, mongoEmployeeCollectionDao);
 		SalaryService salaryService = new SalaryService(salaryDAO);
 		ManagerService managerService = new ManagerService(managerDAO);
 		DepartmentService departmentService = new DepartmentService(departmentDAO);
@@ -39,7 +42,7 @@ public class Application {
 			
 			int choice = makeProcessChoice();
 			
-			if(choice == 9) {
+			if(choice == 10) {
 				break;
 			}
 			
@@ -74,7 +77,8 @@ public class Application {
 				case 8:
 					// burada tüm departmanları listeleyiniz.
 					break;
-				default:
+				case 9:
+					draftEmployeeProfileOperations(employeeService, salaryService);
 					break;
 			}
 			
@@ -92,7 +96,8 @@ public class Application {
 		System.out.println("6- Menüyü tekrar yazdır ");
 		System.out.println("7- Aktif yöneticilik yapanları listele ");
 		System.out.println("8- Departmanları listele ");
-		System.out.println("9- Çıkış ");
+		System.out.println("9- Geçici profil işlemleri ");
+		System.out.println("10- Çıkış ");
 	}
 	
 	public static int makeProcessChoice() {
@@ -141,6 +146,8 @@ public class Application {
 		
 		System.out.println("Çalışan verilerini giriniz:");
 		
+		scanner.nextLine();
+		
 		System.out.println("İsim");
 		String name = scanner.nextLine();
 		
@@ -169,6 +176,8 @@ public class Application {
 		
 		System.out.println("Çalışan ID'sini giriniz: ");
 		long empNo = scanner.nextLong();
+		
+		scanner.nextLine();
 		
 		System.out.println("İsim");
 		String name = scanner.nextLine();
@@ -209,6 +218,55 @@ public class Application {
 	public static void listDepartments(DepartmentService departmentService) {
 		
 		// Burada tğm departmanları listeleyen ve ekrana gösteren kodu yazınız.
+	}
+	
+	public static void draftEmployeeProfileOperations(EmployeeService employeeService, SalaryService salaryService) {
+		
+		System.out.println("1- Yeni profil bilgisi kaydetmek");
+		System.out.println("2- Profil bilgisi almak");
+
+		int choice = scanner.nextInt();
+		
+		if(choice == 1) {
+			
+			System.out.println("Çalışan ID'sini giriniz: ");
+			long empNo = scanner.nextLong();
+			
+			EmployeeProfile employeeProfile = employeeService.loadEmployeeProfile(empNo);
+			
+			if(employeeProfile == null) {
+				System.out.println("Girdiğiniz ID değerine uygun bir çalışan profili bulunamamıştır");
+				return;
+			}
+			
+			List<Long> salaries = salaryService.getSalaries(empNo);
+			employeeProfile.setSalaries(salaries);
+			
+			
+			boolean saveResult = employeeService.saveAsDraft(employeeProfile);
+			if(saveResult) {
+				System.out.println("Draft başarıyla kaydedildi.");
+			}
+			else {
+				System.out.println("Draft kaydedilemedi!");
+			}
+			
+		}
+		else if(choice == 2) {
+			
+			System.out.println("Çalışan ID'sini giriniz: ");
+			long empNo = scanner.nextLong();
+			
+			EmployeeProfile employeeProfile = employeeService.loadProfileAsDraft(empNo);
+			
+			if(employeeProfile == null) {
+				System.out.println("Girdiğiniz ID değerine uygun bir çalışan profili bulunamamıştır");
+				return;
+			}
+			
+			System.out.println(employeeProfile);
+		}
+		
 	}
 
 }

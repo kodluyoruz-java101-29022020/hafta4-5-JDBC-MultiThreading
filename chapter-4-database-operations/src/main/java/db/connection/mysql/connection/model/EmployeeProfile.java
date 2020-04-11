@@ -26,5 +26,9 @@ public class EmployeeProfile {
 	public void setSalaries(List<Long> salaries) {
 		this.salaries = salaries;
 	}
-	
+	@Override
+	public String toString() {
+		return "EmployeeProfile [employee=" + employee + ", departmentName=" + departmentName + ", salaries=" + salaries
+				+ "]";
+	}
 }
